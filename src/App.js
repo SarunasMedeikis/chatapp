@@ -1,23 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React from "react";
+
+function InitialScreen({ userName, setUserName }) {
+  function onChange(event) {
+    setUserName({ ...userName, [event.target.name]: event.target.value });
+  }
+
+  function submitData(event) {
+    event.preventDefault();
+    setUserName({ ...userName, hasUsername: true });
+  }
+
+  return (
+    <form onSubmit={submitData}>
+      <input
+        type="text"
+        placeholder="Enter username"
+        name="userName"
+        value={userName.userName}
+        onChange={onChange}
+      />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
 
 function App() {
+  const [userName, setUserName] = React.useState({
+    hasUsername: false,
+    userName: "",
+  });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="App-header">
+        {userName.hasUsername ? (
+          <h1>userName = {userName.userName}</h1>
+        ) : (
+          <InitialScreen userName={userName} setUserName={setUserName} />
+        )}
+      </div>
     </div>
   );
 }
