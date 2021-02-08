@@ -23,3 +23,83 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+.containerChatBox {
+  display: flex;
+  flex-direction: row;
+  width: 50%;
+  height: 80%;
+  background-color: #ccc;
+  color: #000;
+}
+
+.usersInChat {
+  width: 22%;
+  height: 400px;
+  background-color: rgba(255, 255, 255, 0.733);
+  color: darkblue;
+  text-align: center;
+  border-right: 1px solid #000;
+}
+
+.usersInChat > ul {
+  padding: 0;
+  list-style: none;
+  font-size: 16px;
+}
+
+/* Message styles */
+.chatBox {
+  width: 80%;
+  height: 400px;
+  background-color: rgb(255, 255, 255);
+  overflow: hidden;
+  overflow-x: hidden;
+}
+
+.messageStyles {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  font-size: 16px;
+  text-align: left;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.messageStyles > p {
+  background-color: rgb(0, 183, 255);
+  color: #000;
+  border-radius: 10px 10px 10px 10px;
+  padding: 10px;
+  margin: 0;
+}
+
+.messageSentTime {
+  font-size: 10px;
+}
+.messageSentUserName {
+  font-size: 12px;
+}
+.forScrolling {
+  overflow: scroll;
+  overflow-x: hidden;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+}
+/* Message input  */
+
+.inputMessageField {
+  height: 10%;
+}
+.inputMessageField form {
+  background-color: rgb(92, 92, 92);
+  width: 100%;
+}
+.inputMessageField form input {
+  padding: 10px 100px 10px 100px;
+}
+.inputMessageField form button {
+  padding: 10px;
+}
