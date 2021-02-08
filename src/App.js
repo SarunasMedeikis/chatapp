@@ -1,6 +1,8 @@
 import "./App.css";
-import React from "react";
+import React, { useEffect } from "react";
 import * as FirestoreService from "./services/firestore";
+
+function AllMessagesDisplay({ allMessages }) {}
 
 function InitialScreen({ userName, setUserName }) {
   function onChange(event) {
@@ -29,9 +31,23 @@ function InitialScreen({ userName, setUserName }) {
 function ChatBox({ userName }) {
   const [message, setMessage] = React.useState("");
 
+  const [allMessages, setAllMessages] = React.useState([]);
+  React.useEffect(() => {
+    FirestoreService.readMessagesStream((querySnapshot) => {
+      let messagesArray = [];
+      querySnapshot.forEach((doc) => {
+        messagesArray.push(doc.data());
+        console.log("MESSAGE ADDED" + doc.data().message);
+      });
+      console.log(messagesArray);
+      setAllMessages(messagesArray);
+    });
+  }, []);
+
   function onChange(event) {
     return setMessage(event.target.value);
   }
+
   function sendMessage(event) {
     event.preventDefault();
     FirestoreService.addMessage(userName["userName"], message)
@@ -41,6 +57,7 @@ function ChatBox({ userName }) {
       })
       .catch((e) => console.error(e));
   }
+
   return (
     <div className="containerChatBox">
       <div className="usersInChat">
@@ -54,16 +71,10 @@ function ChatBox({ userName }) {
       </div>
       <div className="chatBox">
         <div className="forScrolling">
-          <div className="messageStyles">
-            <span className="messageSentUserName">John Doe</span>
-            <p>
-              Lorem ipsum color sit it us Lorem ipsum color sit it us Lorem
-              ipsum color sit it us Lorem ipsum color sit it us Lorem ipsum
-              color sit it us Lorem ipsum color sit it usLorem ipsum color sit
-              it us Lorem ipsum color sit it us Lorem ipsum color sit it us
-            </p>
-            <span className="messageSentTime">13:45</span>
-          </div>
+          {allMessages.map((message) => {
+            return console.log("FROM ALLMESSAGES", message);
+          })}
+
           <div className="messageStyles">
             <span className="messageSentUserName">John Doe</span>
             <p>

@@ -1,5 +1,5 @@
 import firebase from "firebase";
-
+import "firebase/firestore";
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -21,6 +21,7 @@ export const addMessage = (userName, message) => {
     .collection("messages")
     .doc(`${today}${userName}`)
     .set({
+      userName: userName,
       message: message,
     })
     .then(() => {
@@ -30,3 +31,20 @@ export const addMessage = (userName, message) => {
       console.error("Error writing document: ", error);
     });
 };
+
+export const readMessagesStream = (observer) => {
+  return db.collection("messages").onSnapshot(observer);
+};
+
+// export const readMessagesStream = () => {
+//     db.collection("messages").onSnapshot((querySnapshot) => {
+//       let messagesArray = [];
+//       querySnapshot.forEach((doc) => {
+//         messagesArray.push(doc.data().userName);
+//         messagesArray.push(doc.data().message);
+//         console.log("MESSAGE ADDED" + doc.data().message);
+//       });
+//       console.log(messagesArray);
+//       return messagesArray;
+//     });
+//   };
