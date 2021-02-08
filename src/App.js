@@ -2,7 +2,41 @@ import "./App.css";
 import React, { useEffect } from "react";
 import * as FirestoreService from "./services/firestore";
 
-function AllMessagesDisplay({ allMessages }) {}
+function AllMessagesDisplay({ userName }) {
+  const [allMessages, setAllMessages] = React.useState([]);
+  React.useEffect(() => {
+    FirestoreService.readMessagesStream((querySnapshot) => {
+      let messagesArray = [];
+      querySnapshot.forEach((doc) => {
+        messagesArray.unshift(doc.data());
+        console.log("MESSAGE ADDED" + doc.data().message);
+      });
+      console.log(messagesArray);
+      setAllMessages(messagesArray.reverse());
+    });
+  }, []);
+  return allMessages.map((message) => {
+    if (userName.userName === message.userName) {
+      return (
+        <div className="messageStyles" style={{ marginLeft: "49%" }}>
+          <span className="messageSentUserName">{message.userName}</span>
+          <p style={{ backgroundColor: "#ff5f6d", color: "#fff" }}>
+            {message.message}
+          </p>
+          <span className="messageSentTime">{message.time}</span>
+        </div>
+      );
+    } else {
+      return (
+        <div className="messageStyles">
+          <span className="messageSentUserName">{message.userName}</span>
+          <p>{message.message}</p>
+          <span className="messageSentTime">{message.time}</span>
+        </div>
+      );
+    }
+  });
+}
 
 function InitialScreen({ userName, setUserName }) {
   function onChange(event) {
@@ -31,19 +65,6 @@ function InitialScreen({ userName, setUserName }) {
 function ChatBox({ userName }) {
   const [message, setMessage] = React.useState("");
 
-  const [allMessages, setAllMessages] = React.useState([]);
-  React.useEffect(() => {
-    FirestoreService.readMessagesStream((querySnapshot) => {
-      let messagesArray = [];
-      querySnapshot.forEach((doc) => {
-        messagesArray.push(doc.data());
-        console.log("MESSAGE ADDED" + doc.data().message);
-      });
-      console.log(messagesArray);
-      setAllMessages(messagesArray);
-    });
-  }, []);
-
   function onChange(event) {
     return setMessage(event.target.value);
   }
@@ -71,20 +92,7 @@ function ChatBox({ userName }) {
       </div>
       <div className="chatBox">
         <div className="forScrolling">
-          {allMessages.map((message) => {
-            return console.log("FROM ALLMESSAGES", message);
-          })}
-
-          <div className="messageStyles">
-            <span className="messageSentUserName">John Doe</span>
-            <p>
-              Lorem ipsum color sit it us Lorem ipsum color sit it us Lorem
-              ipsum color sit it us Lorem ipsum color sit it us Lorem ipsum
-              color sit it us Lorem ipsum color sit it usLorem ipsum color sit
-              it us Lorem ipsum color sit it us Lorem ipsum color sit it us
-            </p>
-            <span className="messageSentTime">13:45</span>
-          </div>
+          {<AllMessagesDisplay userName={userName} />}
         </div>
         <div className="inputMessageField">
           <form onSubmit={sendMessage}>

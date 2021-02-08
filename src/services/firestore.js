@@ -16,6 +16,8 @@ export const authenticateAnonymously = () => {
 
 export const addMessage = (userName, message) => {
   let today = Date.now().toString();
+  let currentDate = new Date();
+  let hoursMinutes = `${currentDate.getHours()}:${currentDate.getMinutes()}`;
   // Add a new message to "messages" collection
   return db
     .collection("messages")
@@ -23,6 +25,7 @@ export const addMessage = (userName, message) => {
     .set({
       userName: userName,
       message: message,
+      time: hoursMinutes,
     })
     .then(() => {
       console.log("Document successfully written!");
@@ -35,16 +38,3 @@ export const addMessage = (userName, message) => {
 export const readMessagesStream = (observer) => {
   return db.collection("messages").onSnapshot(observer);
 };
-
-// export const readMessagesStream = () => {
-//     db.collection("messages").onSnapshot((querySnapshot) => {
-//       let messagesArray = [];
-//       querySnapshot.forEach((doc) => {
-//         messagesArray.push(doc.data().userName);
-//         messagesArray.push(doc.data().message);
-//         console.log("MESSAGE ADDED" + doc.data().message);
-//       });
-//       console.log(messagesArray);
-//       return messagesArray;
-//     });
-//   };
