@@ -4,6 +4,7 @@ import * as FirestoreService from "./services/firestore";
 
 function AllMessagesDisplay({ userName }) {
   const [allMessages, setAllMessages] = React.useState([]);
+
   React.useEffect(() => {
     FirestoreService.readMessagesStream((querySnapshot) => {
       let messagesArray = [];
@@ -79,6 +80,15 @@ function ChatBox({ userName }) {
       .catch((e) => console.error(e));
   }
 
+  // Scrolling to the bottom after message is sent/received.
+  const messageStylesRef = React.useRef();
+  React.useLayoutEffect(() => {
+    if (messageStylesRef.current) {
+      messageStylesRef.current.scrollTop =
+        messageStylesRef.current.scrollHeight;
+    }
+  });
+
   return (
     <div className="containerChatBox">
       <div className="usersInChat">
@@ -91,7 +101,7 @@ function ChatBox({ userName }) {
         </ul>
       </div>
       <div className="chatBox">
-        <div className="forScrolling">
+        <div className="forScrolling" ref={messageStylesRef}>
           {<AllMessagesDisplay userName={userName} />}
         </div>
         <div className="inputMessageField">
